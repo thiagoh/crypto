@@ -1,5 +1,7 @@
 # Crypto C++ library
 
+This library is intented to encrypt and decrypt strings
+
 ## Usage
 
 int len;
