@@ -21,6 +21,13 @@
 
 using namespace com::thiagoh::crypt;
 
+void print(char* text, int len) {
+
+	for (unsigned int i = 0; i < len; i++) {
+		printf("%x", text[i] & 0xff);
+	}
+}
+
 int main(int argc, char *argv[]) {
 
 	try {
@@ -34,24 +41,27 @@ int main(int argc, char *argv[]) {
 		std::cout << argv[1] << std::endl;
 
 		int ciphertextLen = 0;
-		unsigned char ciphertext[128];
-		Crypt::encrypt(plain, len, iv, key, ciphertext, &ciphertextLen);
+
+		unsigned char * ciphertext = new unsigned char(128); // or unsigned char ciphertext[128];
+
+		Crypt::encrypt(plain, len, key, iv, ciphertext, &ciphertextLen);
 
 		/* Do something useful with the ciphertext here */
-		printf("Ciphertext is:\n");
+		printf("Ciphertext is: %d\n", ciphertextLen);
+		print((char*) ciphertext, ciphertextLen);
+		std::cout << std::endl;
 
-		for (unsigned int i = 0; i < ciphertextLen; i++) {
-			printf("%x", ciphertext[i] & 0xff);
-		}
+		int newplaintextLen = 0;
+		unsigned char * newplaintext = new unsigned char(128);
 
-		printf("\n");
-
+		Crypt::decrypt(ciphertext, ciphertextLen, key, iv, newplaintext, &newplaintextLen);
+		printf("DeCiphertext is: %d\n", newplaintextLen);
+		print((char*) newplaintext, newplaintextLen);
 		std::cout << std::endl;
 
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 		return 1;
 	}
-
 }
 
