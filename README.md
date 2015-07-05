@@ -12,6 +12,8 @@ unsigned char* key = "01234567891234567890123456789012"; // 256 bits
 
 const char* plaintext = "the fox jumped over the lazy dog";
 
+The default cipher mode is CBC and algorithm is 3DES_EDE 
+
 Crypto::encrypt(plaintext, strlen(plaintext), key, iv, &ciphertext, &len);
 
 int newlen;
