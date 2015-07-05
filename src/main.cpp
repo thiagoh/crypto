@@ -29,7 +29,7 @@ using namespace com::thiagoh::crypt;
 
 void print(unsigned char* text, int len) {
 
-	for (unsigned int i = 0; i < len; i++) {
+	for (unsigned int i = 0; i < (unsigned int) len; i++) {
 		printf("%x", text[i] & 0xff);
 	}
 }
