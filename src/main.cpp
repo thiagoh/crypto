@@ -19,9 +19,15 @@
 #include <map>
 #include "Crypt.h"
 
+#include <string.h>
+#include <openssl/rand.h>
+#include <openssl/conf.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
+
 using namespace com::thiagoh::crypt;
 
-void print(char* text, int len) {
+void print(unsigned char* text, int len) {
 
 	for (unsigned int i = 0; i < len; i++) {
 		printf("%x", text[i] & 0xff);
@@ -32,32 +38,57 @@ int main(int argc, char *argv[]) {
 
 	try {
 
-		unsigned char* plain = (unsigned char *) argv[1];
-		int len = strlen(argv[1]);
+		/* Set up the key and iv. Do I need to say to not hard code these in a
+		 * real application? :-)
+		 */
 
-		unsigned char* iv = (unsigned char *) "abcdef";
-		unsigned char* key = (unsigned char *) "abcdefghij";
+		/* A 256 bit key */
+		unsigned char *key = (unsigned char *) "any256bitkey_chars_to_complete_0";
 
-		std::cout << argv[1] << std::endl;
+		/* A 128 bit IV */
+		unsigned char *iv = (unsigned char *) "any128bitkey_000";
 
-		int ciphertextLen = 0;
+		/* Message to be encrypted */
+		unsigned char *plaintext = (unsigned char *) argv[1]; //"The quick brown fox jumps over the lazyefoiajef oaijf aoiej affe iab nhaaaaaaau";
+		unsigned char *plaintext2 = (unsigned char *) argv[2]; //"The quick brown fox jumps over the lazyefoiajef oaijf aoiej affe iab nhaaaaaaau";
 
-		unsigned char * ciphertext = new unsigned char(128); // or unsigned char ciphertext[128];
+		/* Buffer for ciphertext. Ensure the buffer is long enough for the
+		 * ciphertext which may be longer than the plaintext, dependant on the
+		 * algorithm and mode
+		 */
+		unsigned char ciphertext[128];
+		unsigned char ciphertext2[128];
 
-		Crypt::encrypt(plain, len, key, iv, ciphertext, &ciphertextLen);
+		/* Buffer for the decrypted text */
+		unsigned char decryptedtext[128];
+		unsigned char decryptedtext2[128];
+
+		int decryptedtext_len, decryptedtext_len2, ciphertext_len, ciphertext_len2;
+
+		/* Encrypt the plaintext */
+		Crypt::encrypt(plaintext, strlen((char *) plaintext), key, iv, ciphertext, &ciphertext_len);
+		Crypt::encrypt(plaintext2, strlen((char *) plaintext2), key, iv, ciphertext2, &ciphertext_len2);
 
 		/* Do something useful with the ciphertext here */
-		printf("Ciphertext is: %d\n", ciphertextLen);
-		print((char*) ciphertext, ciphertextLen);
-		std::cout << std::endl;
+		printf("Ciphertext is:\n");
+		print(ciphertext, ciphertext_len);
+		printf("\n");
+		print(ciphertext2, ciphertext_len2);
+		printf("\n");
 
-		int newplaintextLen = 0;
-		unsigned char * newplaintext = new unsigned char(128);
+		//BIO_dump_fp(stdout, (const char *) ciphertext, ciphertext_len);
 
-		Crypt::decrypt(ciphertext, ciphertextLen, key, iv, newplaintext, &newplaintextLen);
-		printf("DeCiphertext is: %d\n", newplaintextLen);
-		print((char*) newplaintext, newplaintextLen);
-		std::cout << std::endl;
+		/* Decrypt the ciphertext */
+		Crypt::decrypt(ciphertext, ciphertext_len, key, iv, decryptedtext, &decryptedtext_len);
+		Crypt::decrypt(ciphertext2, ciphertext_len2, key, iv, decryptedtext2, &decryptedtext_len2);
+
+		/* Add a NULL terminator. We are expecting printable text */
+		decryptedtext[decryptedtext_len] = '\0';
+		decryptedtext2[decryptedtext_len2] = '\0';
+
+		/* Show the decrypted text */
+		printf("Decrypted text is:\n %s\n", decryptedtext);
+		printf("Decrypted text is:\n %s\n", decryptedtext2);
 
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;

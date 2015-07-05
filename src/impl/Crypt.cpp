@@ -23,6 +23,15 @@ Crypt::~Crypt() {
 
 void Crypt::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv, unsigned char* ciphertext, int* ciphertextLength) {
 
+	/* Load the human readable error strings for libcrypto */
+	ERR_load_crypto_strings();
+
+	/* Load all digest and cipher algorithms */
+	OpenSSL_add_all_algorithms();
+
+	/* Load config file, and other important initialisation */
+	OPENSSL_config(NULL);
+
 	EVP_CIPHER_CTX *ctx;
 
 	int len;
@@ -36,8 +45,7 @@ void Crypt::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char
 	 * In this example we are using 256 bit AES (i.e. a 256 bit key). The
 	 * IV size for *most* modes is the same as the block size. For AES this
 	 * is 128 bits */
-//	if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-	if (1 != EVP_EncryptInit_ex(ctx, EVP_des_ede3_cbc(), NULL, key, iv))
+	if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
 		handleErrors();
 
 	/* Provide the message to be encrypted, and obtain the encrypted output.
@@ -56,9 +64,29 @@ void Crypt::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char
 
 	/* Clean up */
 	EVP_CIPHER_CTX_free(ctx);
+
+	/* Clean up */
+
+	/* Removes all digests and ciphers */
+	EVP_cleanup();
+
+	/* if you omit the next, a small leak may be left when you make use of the BIO (low level API) for e.g. base64 transformations */
+	CRYPTO_cleanup_all_ex_data();
+
+	/* Remove error strings */
+	ERR_free_strings();
 }
 
 void Crypt::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned char *key, unsigned char* iv, unsigned char* plaintext, int* plaintextLength) {
+
+	/* Load the human readable error strings for libcrypto */
+	ERR_load_crypto_strings();
+
+	/* Load all digest and cipher algorithms */
+	OpenSSL_add_all_algorithms();
+
+	/* Load config file, and other important initialisation */
+	OPENSSL_config(NULL);
 
 	EVP_CIPHER_CTX *ctx;
 
@@ -73,8 +101,7 @@ void Crypt::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned ch
 	 * In this example we are using 256 bit AES (i.e. a 256 bit key). The
 	 * IV size for *most* modes is the same as the block size. For AES this
 	 * is 128 bits */
-//	if (1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-	if (1 != EVP_DecryptInit_ex(ctx, EVP_des_ede3_cbc(), NULL, key, iv))
+	if (1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
 		handleErrors();
 
 	/* Provide the message to be decrypted, and obtain the plaintext output.
@@ -95,6 +122,15 @@ void Crypt::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned ch
 
 	/* Clean up */
 	EVP_CIPHER_CTX_free(ctx);
+
+	/* Removes all digests and ciphers */
+	EVP_cleanup();
+
+	/* if you omit the next, a small leak may be left when you make use of the BIO (low level API) for e.g. base64 transformations */
+	CRYPTO_cleanup_all_ex_data();
+
+	/* Remove error strings */
+	ERR_free_strings();
 }
 
 } /* namespace crypt */
