@@ -10,8 +10,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 project(app_project)
 
-file(GLOB SOURCES src/impl/*.cpp)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} src/include)
+file(GLOB SOURCES impl/*.cpp)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} include)
 
 add_executable(myapp main.cpp ${SOURCES})
 
