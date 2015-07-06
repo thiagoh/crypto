@@ -13,6 +13,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 add_subdirectory(src)
 add_subdirectory(test)
 
-#enable_testing()
+enable_testing()
 #add_test (TestCase1 test)
 #add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS test)

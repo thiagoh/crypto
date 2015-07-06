@@ -12,7 +12,5 @@ cmake -G"Eclipse CDT4 - Unix Makefiles" -D_ECLIPSE_VERSION=4.5 -D CMAKE_BUILD_TY
 
 mv .project ..
 mv .cproject ..
-
 make -j 4 
-make check
-make test
+ctest --output-on-failure .

@@ -4,6 +4,7 @@ file(GLOB SOURCES impl/*.cpp)
 include_directories(include)
 
 add_executable(myapp main.cpp ${SOURCES})
+add_library(app_project main.cpp ${SOURCES})
 
 install(TARGETS myapp DESTINATION bin)
 
