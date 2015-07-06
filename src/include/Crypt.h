@@ -12,12 +12,14 @@
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
+#include <utility>
 
 namespace com {
 namespace thiagoh {
 namespace crypt {
 
 class Crypt {
+
 public:
 	Crypt();
 	virtual ~Crypt();
@@ -27,8 +29,8 @@ public:
 		abort();
 	};
 
-	static void encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv, unsigned char* ciphertext, int* ciphertextLength);
-	static void decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned char *key, unsigned char* iv, unsigned char* plaintext, int* plaintextLength);
+	static std::pair<unsigned char*, int> encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv);
+	static std::pair<unsigned char*, int> decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned char *key, unsigned char* iv);
 };
 
 } /* namespace crypt */

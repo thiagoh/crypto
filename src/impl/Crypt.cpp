@@ -5,10 +5,8 @@
  *      Author: thiagoh
  */
 
-#include "Crypt.h"
-#include <sstream>
-#include <iostream>
 #include <string.h>
+#include "Crypt.h"
 
 namespace com {
 namespace thiagoh {
@@ -21,7 +19,9 @@ Crypt::Crypt() {
 Crypt::~Crypt() {
 }
 
-void Crypt::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv, unsigned char* ciphertext, int* ciphertextLength) {
+std::pair<unsigned char*, int> Crypt::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv) {
+
+	unsigned char* ciphertext = new unsigned char[plaintextLength + 16];
 
 	/* Load the human readable error strings for libcrypto */
 	ERR_load_crypto_strings();
@@ -35,7 +35,7 @@ void Crypt::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char
 	EVP_CIPHER_CTX *ctx;
 
 	int len;
-
+	int ciphertext_len;
 	/* Create and initialise the context */
 	if (!(ctx = EVP_CIPHER_CTX_new()))
 		handleErrors();
@@ -53,14 +53,14 @@ void Crypt::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char
 	 */
 	if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintextLength))
 		handleErrors();
-	(*ciphertextLength) = len;
+	ciphertext_len = len;
 
 	/* Finalise the encryption. Further ciphertext bytes may be written at
 	 * this stage.
 	 */
 	if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len))
 		handleErrors();
-	(*ciphertextLength) += len;
+	ciphertext_len += len;
 
 	/* Clean up */
 	EVP_CIPHER_CTX_free(ctx);
@@ -75,9 +75,13 @@ void Crypt::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char
 
 	/* Remove error strings */
 	ERR_free_strings();
+
+	return std::make_pair(ciphertext, ciphertext_len);
 }
 
-void Crypt::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned char *key, unsigned char* iv, unsigned char* plaintext, int* plaintextLength) {
+std::pair<unsigned char*, int> Crypt::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned char *key, unsigned char* iv) {
+
+	unsigned char* plaintext = new unsigned char[ciphertextLength];
 
 	/* Load the human readable error strings for libcrypto */
 	ERR_load_crypto_strings();
@@ -91,6 +95,7 @@ void Crypt::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned ch
 	EVP_CIPHER_CTX *ctx;
 
 	int len;
+	int plaintext_len;
 
 	/* Create and initialise the context */
 	if (!(ctx = EVP_CIPHER_CTX_new()))
@@ -109,16 +114,14 @@ void Crypt::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned ch
 	 */
 	if (1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertextLength))
 		handleErrors();
-
-	(*plaintextLength) = len;
+	plaintext_len = len;
 
 	/* Finalise the decryption. Further plaintext bytes may be written at
 	 * this stage.
 	 */
 	if (1 != EVP_DecryptFinal_ex(ctx, plaintext + len, &len))
 		handleErrors();
-
-	(*plaintextLength) += len;
+	plaintext_len += len;
 
 	/* Clean up */
 	EVP_CIPHER_CTX_free(ctx);
@@ -131,6 +134,10 @@ void Crypt::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned ch
 
 	/* Remove error strings */
 	ERR_free_strings();
+
+	plaintext[plaintext_len] = '\0';
+
+	return std::make_pair(plaintext, plaintext_len);
 }
 
 } /* namespace crypt */

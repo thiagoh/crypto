@@ -7,6 +7,7 @@
 
 #define BOOST_TEST_MODULE example
 #define BOOST_TEST_LOG_LEVEL all
+#define BOOST_TEST_MAIN
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/included/unit_test.hpp>
@@ -54,16 +55,16 @@ BOOST_AUTO_TEST_CASE(mytest2) {
 	/* A 128 bit IV */
 	unsigned char *iv = (unsigned char *) "any128bitkey_000";
 
-	unsigned char* plain = (unsigned char *) "the fox jumped over the lazy dog";
-	unsigned char ciphered[1024];
-	unsigned char deciphered[1024];
-	int len = 0, delen = 0;
+	unsigned char* plain = (unsigned char *) "Se hoje é o dia das crianças... Ontem eu disse: o dia da criança é o dia da mãe, dos pais, das professoras, mas também é o dia dos animais, sempre que você olha uma criança, há sempre uma figura oculta, que é um cachorro atrás. O que é algo muito importante!"; //"the fox jumped over the lazy dog";
 
-	Crypt::encrypt(plain, strlen((char*) plain), key, iv, ciphered, &len);
-	Crypt::decrypt(ciphered, len, key, iv, deciphered, &delen);
+	std::pair<unsigned char*, int> cipheredPair = Crypt::encrypt(plain, strlen((char*) plain), key, iv);
+	std::pair<unsigned char*, int> decipheredPair = Crypt::decrypt(cipheredPair.first, cipheredPair.second, key, iv);
 
-//	BOOST_CHECK_PREDICATE(std::not_equal_to<unsigned char*>(), (ciphered, deciphered));
-	BOOST_CHECK_EQUAL(plain, deciphered);
+	BOOST_CHECK_EQUAL(plain, decipheredPair.first);
+
+	delete plain;
+	delete cipheredPair.first;
+	delete decipheredPair.first;
 }
 
 BOOST_AUTO_TEST_CASE(test_tear_down) {
