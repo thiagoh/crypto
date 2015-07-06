@@ -15,13 +15,8 @@
 #include <boost/test/unit_test_log.hpp>
 #include <boost/test/auto_unit_test.hpp>
 
-#include <iostream>
-#include <stdio.h>
 #include "time.h"
 #include "Crypt.h"
-#include <openssl/conf.h>
-#include <openssl/evp.h>
-#include <openssl/err.h>
 
 using namespace boost::unit_test;
 using namespace com::thiagoh::crypt;
@@ -60,11 +55,83 @@ BOOST_AUTO_TEST_CASE(mytest2) {
 	std::pair<unsigned char*, int> cipheredPair = Crypt::encrypt(plain, strlen((char*) plain), key, iv);
 	std::pair<unsigned char*, int> decipheredPair = Crypt::decrypt(cipheredPair.first, cipheredPair.second, key, iv);
 
-	BOOST_CHECK_EQUAL(plain, decipheredPair.first);
+	BOOST_CHECK_EQUAL(strlen((char*) plain), decipheredPair.second);
+	BOOST_CHECK(memcmp((const char *)plain, (const char *) decipheredPair.first, strlen((char*) plain)) == 0);
+	BOOST_CHECK(strncmp((const char *)plain, (const char *) decipheredPair.first, strlen((char*) plain)) == 0);
+	BOOST_TEST_MESSAGE(plain << " is equal to " << decipheredPair.first);
+}
 
-	delete plain;
-	delete cipheredPair.first;
-	delete decipheredPair.first;
+BOOST_AUTO_TEST_CASE(mytest3) {
+
+	/* A 256 bit key */
+	unsigned char *key = (unsigned char *) "any256bitkey_chars_to_complete_1";
+
+	/* A 128 bit IV */
+	unsigned char *iv = (unsigned char *) "any128bitkey_001";
+
+	unsigned char* s1 = (unsigned char *) "the fox jumped over the lazy dog 1";
+	unsigned char* s2 = (unsigned char *) "the fox jumped over the lazy dog 2";
+	unsigned char* s3 = (unsigned char *) "the fox jumped over the lazy dog 3";
+	unsigned char* p[3];
+	p[0] = s1;
+	p[1] = s2;
+	p[2] = s3;
+
+	for (unsigned int i = 0; i < 3; i++) {
+
+		unsigned char* plain = p[i];
+
+		std::pair<unsigned char*, int> cipheredPair = Crypt::encrypt(plain, strlen((char*) plain), key, iv);
+		std::pair<unsigned char*, int> decipheredPair = Crypt::decrypt(cipheredPair.first, cipheredPair.second, key, iv);
+
+		BOOST_CHECK_EQUAL(strlen((char*) plain), decipheredPair.second);
+		BOOST_CHECK(memcmp((const char *)plain, (const char *) decipheredPair.first, strlen((char*) plain)) == 0);
+		BOOST_CHECK(strncmp((const char *)plain, (const char *) decipheredPair.first, strlen((char*) plain)) == 0);
+		BOOST_TEST_MESSAGE(plain << " is equal to " << decipheredPair.first);
+	}
+}
+
+BOOST_AUTO_TEST_CASE(mytest4) {
+
+	/* A 256 bit key */
+	unsigned char *key = (unsigned char *) "any256bitkey_chars_to_complete_2";
+
+	/* A 128 bit IV */
+	unsigned char *iv = (unsigned char *) "any128bitkey_002";
+
+	unsigned char* sc1 = (unsigned char *) "the fox jumped over the lazy dog c1";
+	unsigned char* sc2 = (unsigned char *) "the fox jumped over the lazy dog c2";
+	unsigned char* sc3 = (unsigned char *) "the fox jumped over the lazy dog c3";
+	unsigned char* pc[3];
+	pc[0] = sc1;
+	pc[1] = sc2;
+	pc[2] = sc3;
+
+	unsigned char* se1 = (unsigned char *) "the fox jumped over the lazy dog e1";
+	unsigned char* se2 = (unsigned char *) "the fox jumped over the lazy dog e2";
+	unsigned char* se3 = (unsigned char *) "the fox jumped over the lazy dog e3";
+	unsigned char* pe[3];
+	pe[0] = se1;
+	pe[1] = se2;
+	pe[2] = se3;
+
+	for (unsigned int i = 0; i < 3; i++) {
+
+		unsigned char* plainC = pc[i];
+		unsigned char* plainE = pe[i];
+
+		std::pair<unsigned char*, int> cipheredPair = Crypt::encrypt(plainC, strlen((char*) plainC), key, iv);
+		std::pair<unsigned char*, int> decipheredPair = Crypt::decrypt(cipheredPair.first, cipheredPair.second, key, iv);
+
+		BOOST_CHECK_EQUAL(strlen((char*) plainC), decipheredPair.second);
+		BOOST_CHECK(memcmp((const char *)plainC, (const char *) decipheredPair.first, strlen((char*) plainC)) == 0);
+		BOOST_CHECK(strncmp((const char *)plainC, (const char *) decipheredPair.first, strlen((char*) plainC)) == 0);
+		BOOST_TEST_MESSAGE(plainC << " is equal to " << decipheredPair.first);
+
+		BOOST_CHECK(memcmp((const char *)plainE, (const char *) decipheredPair.first, strlen((char*) plainC)) != 0);
+		BOOST_CHECK(strncmp((const char *)plainE, (const char *) decipheredPair.first, strlen((char*) plainC)) != 0);
+		BOOST_TEST_MESSAGE(plainC << " is different from " << plainE);
+	}
 }
 
 BOOST_AUTO_TEST_CASE(test_tear_down) {
