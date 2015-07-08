@@ -1,6 +1,6 @@
 # Crypto C++ library 
 
-https://travis-ci.org/thiagoh/crypto.svg?branch=master
+[![Build Status](https://travis-ci.org/thiagoh/crypto.svg?branch=master)](https://travis-ci.org/thiagoh/crypto)
 
 This library is intented to encrypt and decrypt data
 
