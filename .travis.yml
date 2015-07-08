@@ -1,9 +1,8 @@
-language:
-    - cpp
+language: cpp
 
 compiler:
-    ##- clang
     - gcc
+    ##- clang
 
 env:
     - BUILD_SHARED_LIBS="ON" CMAKE_BUILD_TYPE="Release"
@@ -30,7 +29,7 @@ before_install:
 #    # update compilers
 #    - if [ "${CXX}" == "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 #    - if [ "${CXX}" == "clang++" ]; then export CXX="clang++-3.2" CC="clang-3.2"; fi
-#
+
 script:
 	- rm -rf _build || true
 	- mkdir _build
