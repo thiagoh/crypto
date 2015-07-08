@@ -15,16 +15,16 @@ before_install:
 #    - sudo add-apt-repository ppa:apokluda/boost1.53 --yes
 #    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test --yes # libstdc++-4.8
 #    - if [ "${CXX}" == "clang++" ]; then sudo add-apt-repository --yes ppa:h-rayflood/llvm; fi # clang++-3.2
-    - sudo apt-get update
+    - sudo apt-get update -qq
 
 install:
-    - sudo apt-get install libboost-system-dev
-    - sudo apt-get install libboost-regex-dev
-    - sudo apt-get install libboost-filesystem-dev
-    - sudo apt-get install libboost-thread-dev
-    - sudo apt-get install libboost-test-dev
-    #- sudo apt-get install openssl libssl-dev
-    - sudo apt-get install libssl-dev
+    - sudo apt-get install -y libboost-system-dev
+    - sudo apt-get install -y libboost-regex-dev
+    - sudo apt-get install -y libboost-filesystem-dev
+    - sudo apt-get install -y libboost-thread-dev
+    - sudo apt-get install -y libboost-test-dev
+    - sudo apt-get install -y openssl libssl-dev
+    - sudo apt-get install -y libssl-dev
 
 #before_script:
 #    # update compilers
