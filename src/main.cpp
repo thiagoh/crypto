@@ -37,6 +37,8 @@ void print(unsigned char* text, int len) {
 
 int main(int argc, char *argv[]) {
 
+	// author: thiagoh
+
 	printf("do main again");
 
 //	try {
