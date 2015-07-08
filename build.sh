@@ -8,7 +8,7 @@ cd $current_dir/build
 
 #cmake --debug-output .. 
 
-cmake -G"Eclipse CDT4 - Unix Makefiles" -D_ECLIPSE_VERSION=4.5 -D CMAKE_BUILD_TYPE=Debug ..
+cmake -G"Eclipse CDT4 - Unix Makefiles" -D_ECLIPSE_VERSION=4.5 -D CMAKE_BUILD_TYPE=Release ..
 
 mv .project ..
 mv .cproject ..
