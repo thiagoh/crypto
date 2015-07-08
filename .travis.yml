@@ -22,6 +22,7 @@ install:
     - sudo apt-get install libboost-regex-dev
     - sudo apt-get install libboost-filesystem-dev
     - sudo apt-get install libboost-thread-dev
+    - sudo apt-get install libboost-test-dev
     - sudo apt-get install openssl
 
 #before_script:
