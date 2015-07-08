@@ -37,6 +37,8 @@ void print(unsigned char* text, int len) {
 
 int main(int argc, char *argv[]) {
 
+	printf("do main");
+
 //	try {
 //
 //		/* Set up the key and iv. Do I need to say to not hard code these in a
