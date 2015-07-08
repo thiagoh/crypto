@@ -4,7 +4,7 @@ file(GLOB SOURCES impl/*.cpp include/*.h)
 include_directories(include)
 
 add_executable(myapp main.cpp ${SOURCES})
-add_library(app_project ${SOURCES} include/Crypt.h)
+add_library(app_project ${SOURCES})
 
 install(TARGETS myapp DESTINATION bin)
 

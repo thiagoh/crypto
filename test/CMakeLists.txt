@@ -13,7 +13,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/src/impl 
 	${CMAKE_SOURCE_DIR}/src/include)
 
-add_executable (test_crypt crypt_tests.cpp)
+add_executable (test_crypt crypto_tests_1.cpp)
 
 target_link_libraries(test_crypt 
 	${Boost_LIBRARIES} 

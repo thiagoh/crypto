@@ -1,25 +1,25 @@
 /*
- * Crypt.cpp
+ * Crypto.cpp
  *
  *  Created on: Jul 2, 2015
  *      Author: thiagoh
  */
 
 #include <string.h>
-#include "Crypt.h"
+#include "Crypto.h"
 
 namespace com {
 namespace thiagoh {
 namespace crypt {
 
-Crypt::Crypt() {
+Crypto::Crypto() {
 
 }
 
-Crypt::~Crypt() {
+Crypto::~Crypto() {
 }
 
-std::pair<unsigned char*, int> Crypt::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv) {
+std::pair<unsigned char*, int> Crypto::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv) {
 
 	unsigned char* ciphertext = new unsigned char[plaintextLength + 16];
 
@@ -79,7 +79,7 @@ std::pair<unsigned char*, int> Crypt::encrypt(unsigned char* plaintext, int plai
 	return std::make_pair(ciphertext, ciphertext_len);
 }
 
-std::pair<unsigned char*, int> Crypt::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned char *key, unsigned char* iv) {
+std::pair<unsigned char*, int> Crypto::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned char *key, unsigned char* iv) {
 
 	unsigned char* plaintext = new unsigned char[ciphertextLength];
 

@@ -1,5 +1,5 @@
 /*
- * Crypt.h
+ * Crypto.h
  *
  *  Created on: Jul 2, 2015
  *      Author: thiagoh
@@ -18,11 +18,11 @@ namespace com {
 namespace thiagoh {
 namespace crypt {
 
-class Crypt {
+class Crypto {
 
 public:
-	Crypt();
-	virtual ~Crypt();
+	Crypto();
+	virtual ~Crypto();
 
 	static void handleErrors(void) {
 		ERR_print_errors_fp(stderr);
