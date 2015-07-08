@@ -1,6 +1,6 @@
 # Crypto C++ library
 
-This library is intented to encrypt and decrypt strings
+This library is intented to encrypt and decrypt data
 
 ## Usage
 
