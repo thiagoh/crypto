@@ -16,9 +16,8 @@ include_directories(${OpenSSL_INCLUDE_DIRS})
 
 target_link_libraries(myapp
 	${Boost_LIBRARIES} 
-	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} 
-	crypto ssl 
-	${OpenSSL_LIBRARIES})
+	${OpenSSL_LIBRARIES}
+	crypto ssl)
 
 #set (CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} /data/dev/cpp/cpp-netlib/build )
 #find_package ( cppnetlib 0.11.0 REQUIRED )
