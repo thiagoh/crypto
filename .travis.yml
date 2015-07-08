@@ -11,8 +11,6 @@ env:
     - BUILD_SHARED_LIBS="OFF" CMAKE_BUILD_TYPE="Debug"
 
 before_install:
-	- echo $LANG
-	- echo $LC_ALL
 #    - sudo add-apt-repository ppa:apokluda/boost1.53 --yes
 #    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test --yes # libstdc++-4.8
 #    - if [ "${CXX}" == "clang++" ]; then sudo add-apt-repository --yes ppa:h-rayflood/llvm; fi # clang++-3.2
