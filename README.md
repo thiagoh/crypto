@@ -1,4 +1,6 @@
-# Crypto C++ library
+# Crypto C++ library 
+
+[![Build Status](https://travis-ci.org/thiagoh/crypto.svg?branch=master)](https://travis-ci.org/thiagoh/crypto)
 
 This library is intented to encrypt and decrypt data
 
@@ -27,10 +29,13 @@ newplaintext.second; // length
 ## build process
 
 ```
-bash
+./build.sh
+
 mkdir build
 cd build
 rm -rf ./* 
 cmake --debug-output .. 
 make -j 4
 ``` 
+
+
