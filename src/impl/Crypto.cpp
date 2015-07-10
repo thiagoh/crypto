@@ -6,6 +6,7 @@
  */
 
 #include <string.h>
+#include <stdexcept>
 #include "Crypto.h"
 
 namespace com {
@@ -20,6 +21,9 @@ Crypto::~Crypto() {
 }
 
 std::pair<unsigned char*, int> Crypto::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv) {
+
+	if (!plaintext)
+		throw std::invalid_argument("Plaintext must be defined");
 
 	unsigned char* ciphertext = new unsigned char[plaintextLength + 16];
 
