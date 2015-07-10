@@ -29,10 +29,13 @@ newplaintext.second; // length
 ## build process
 
 ```
-bash
+./build.sh
+
 mkdir build
 cd build
 rm -rf ./* 
 cmake --debug-output .. 
 make -j 4
 ``` 
+
+
