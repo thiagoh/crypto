@@ -25,6 +25,9 @@ std::pair<unsigned char*, int> Crypto::encrypt(unsigned char* plaintext, int pla
 	if (!plaintext)
 		throw std::invalid_argument("Plaintext must be defined");
 
+	if (plaintextLength < 0)
+		throw std::invalid_argument("Plaintext length must be positive");
+
 	unsigned char* ciphertext = new unsigned char[plaintextLength + 16];
 
 	/* Load the human readable error strings for libcrypto */
