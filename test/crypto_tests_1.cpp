@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(mytest_big_text1) {
 	BOOST_TEST_MESSAGE(plain << " is equal to " << decipheredPair.first);
 }
 
-BOOST_AUTO_TEST_CASE(mytest_big_text2) {
+BOOST_AUTO_TEST_CASE(mytest_big_text2_random_key) {
 
 	/* A 256 bit key */
 	unsigned char *key = (unsigned char *) _gen_random(500);
