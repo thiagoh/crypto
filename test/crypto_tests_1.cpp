@@ -201,6 +201,26 @@ BOOST_AUTO_TEST_CASE(mytest_big_text1) {
 	BOOST_TEST_MESSAGE(plain << " is equal to " << decipheredPair.first);
 }
 
+BOOST_AUTO_TEST_CASE(mytest_big_text2) {
+
+	/* A 256 bit key */
+	unsigned char *key = (unsigned char *) _gen_random(500);
+
+	/* A 128 bit IV */
+	unsigned char *iv = (unsigned char *) _gen_random(128);
+
+	int len = (10 * 1024) + ((10 % rand()) * 50 * 1024);
+	unsigned char* plain = (unsigned char*) _gen_random(len);
+
+	std::pair<unsigned char*, int> cipheredPair = Crypto::encrypt(plain, strlen((char*) plain), key, iv);
+	std::pair<unsigned char*, int> decipheredPair = Crypto::decrypt(cipheredPair.first, cipheredPair.second, key, iv);
+
+	BOOST_CHECK_EQUAL(strlen((char*) plain), decipheredPair.second);
+	BOOST_CHECK(memcmp((const char *)plain, (const char *) decipheredPair.first, strlen((char*) plain)) == 0);
+	BOOST_CHECK(strncmp((const char *)plain, (const char *) decipheredPair.first, strlen((char*) plain)) == 0);
+	BOOST_TEST_MESSAGE(plain << " is equal to " << decipheredPair.first);
+}
+
 BOOST_AUTO_TEST_CASE(test_tear_down) {
 
 	long current_time; // real call is required here
