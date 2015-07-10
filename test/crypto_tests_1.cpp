@@ -152,7 +152,7 @@ BOOST_AUTO_TEST_CASE(mytest_empty1) {
 
 	} catch(std::logic_error& e) {
 
-		BOOST_MESSAGE(e.what());
+		BOOST_TEST_MESSAGE(e.what());
 	}
 
 	unsigned char* plain = (unsigned char *) "";
@@ -190,6 +190,7 @@ BOOST_AUTO_TEST_CASE(mytest_big_text1) {
 	unsigned char *iv = (unsigned char *) "any128bitkey_001";
 
 	int len = (10 * 1024) + ((10 % rand()) * 50 * 1024);
+	BOOST_TEST_MESSAGE("Length to be encrypted is: " << len);
 	unsigned char* plain = (unsigned char*) _gen_random(len);
 
 	std::pair<unsigned char*, int> cipheredPair = Crypto::encrypt(plain, strlen((char*) plain), key, iv);
@@ -210,6 +211,7 @@ BOOST_AUTO_TEST_CASE(mytest_big_text2) {
 	unsigned char *iv = (unsigned char *) _gen_random(128);
 
 	int len = (10 * 1024) + ((10 % rand()) * 50 * 1024);
+	BOOST_TEST_MESSAGE("Length to be encrypted is: " << len);
 	unsigned char* plain = (unsigned char*) _gen_random(len);
 
 	std::pair<unsigned char*, int> cipheredPair = Crypto::encrypt(plain, strlen((char*) plain), key, iv);
