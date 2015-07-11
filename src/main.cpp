@@ -14,18 +14,23 @@
  to the `hello_world_server`, then the output is simply "Hello,
  World!".
  */
+#include <iostream>
+#include <string>
 #include <string.h>
-#include <crypto.h>
+#include <map>
+#include <Crypto.h>
+
 #include <string.h>
 #include <openssl/rand.h>
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
 
+using namespace com::thiagoh::crypt;
+
 void print(unsigned char* text, int len) {
 
-	unsigned int i;
-	for (i = 0; i < (unsigned int) len; i++) {
+	for (unsigned int i = 0; i < (unsigned int) len; i++) {
 		printf("%x", text[i] & 0xff);
 	}
 }
@@ -35,8 +40,6 @@ int main(int argc, char *argv[]) {
 	// author: thiagoh
 
 	printf("do main again");
-
-	return 0;
 
 //	try {
 //

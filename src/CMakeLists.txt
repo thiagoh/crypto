@@ -1,16 +1,26 @@
 cmake_minimum_required(VERSION 2.8)
 
-file(GLOB SOURCES impl/*.c include/*.h)
+file(GLOB SOURCES impl/*.cpp include/*.h)
 include_directories(include)
 
-add_executable(app main.c ${SOURCES})
-add_library(crypto_c ${SOURCES})
+add_executable(myapp main.cpp ${SOURCES})
+add_library(app_project ${SOURCES})
 
-install(TARGETS app DESTINATION bin)
+install(TARGETS myapp DESTINATION bin)
 
 find_package(OpenSSL)
 include_directories(${OpenSSL_INCLUDE_DIRS})
 
+<<<<<<< HEAD
 target_link_libraries(app
+=======
+target_link_libraries(myapp
+	${Boost_LIBRARIES} 
+>>>>>>> parent of b2089b1... tests
 	${OpenSSL_LIBRARIES}
 	crypto ssl)
+
+#set (CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} /data/dev/cpp/cpp-netlib/build )
+#find_package ( cppnetlib 0.11.0 REQUIRED )
+#include_directories ( ${CPPNETLIB_INCLUDE_DIRS} )
+#target_link_libraries ( myapp ${CPPNETLIB_LIBRARIES} )
