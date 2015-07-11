@@ -5,30 +5,31 @@
  *      Author: thiagoh
  */
 
+#include <crypto.h>
 #include <string.h>
-#include <stdexcept>
-#include "Crypto.h"
 
-namespace com {
-namespace thiagoh {
-namespace crypt {
+void crypto_handle_errors() {
+	ERR_print_errors_fp(stderr);
+	abort();
+};
 
-Crypto::Crypto() {
+crypto_data crypto_encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv) {
 
-}
+	crypto_data p;
 
-Crypto::~Crypto() {
-}
+	if (!plaintext) {
+		p.error = true;
+		p.message = "Plaintext must be defined";
+		return p;
+	}
 
-std::pair<unsigned char*, int> Crypto::encrypt(unsigned char* plaintext, int plaintextLength, unsigned char *key, unsigned char* iv) {
+	if (plaintextLength < 0) {
+		p.error = true;
+		p.message = "Plaintext length must be positive";
+		return p;
+	}
 
-	if (!plaintext)
-		throw std::invalid_argument("Plaintext must be defined");
-
-	if (plaintextLength < 0)
-		throw std::invalid_argument("Plaintext length must be positive");
-
-	unsigned char* ciphertext = new unsigned char[plaintextLength + 16];
+	unsigned char* ciphertext = malloc(sizeof(unsigned char) * (plaintextLength + 16));
 
 	/* Load the human readable error strings for libcrypto */
 	ERR_load_crypto_strings();
@@ -45,7 +46,7 @@ std::pair<unsigned char*, int> Crypto::encrypt(unsigned char* plaintext, int pla
 	int ciphertext_len;
 	/* Create and initialise the context */
 	if (!(ctx = EVP_CIPHER_CTX_new()))
-		handleErrors();
+		crypto_handle_errors();
 
 	/* Initialise the encryption operation. IMPORTANT - ensure you use a key
 	 * and IV size appropriate for your cipher
@@ -53,20 +54,22 @@ std::pair<unsigned char*, int> Crypto::encrypt(unsigned char* plaintext, int pla
 	 * IV size for *most* modes is the same as the block size. For AES this
 	 * is 128 bits */
 	if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-		handleErrors();
+		crypto_handle_errors();
 
 	/* Provide the message to be encrypted, and obtain the encrypted output.
 	 * EVP_EncryptUpdate can be called multiple times if necessary
 	 */
 	if (1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintextLength))
-		handleErrors();
+		crypto_handle_errors();
+
 	ciphertext_len = len;
 
 	/* Finalise the encryption. Further ciphertext bytes may be written at
 	 * this stage.
 	 */
 	if (1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len))
-		handleErrors();
+		crypto_handle_errors();
+
 	ciphertext_len += len;
 
 	/* Clean up */
@@ -83,12 +86,30 @@ std::pair<unsigned char*, int> Crypto::encrypt(unsigned char* plaintext, int pla
 	/* Remove error strings */
 	ERR_free_strings();
 
-	return std::make_pair(ciphertext, ciphertext_len);
+	p.error = false;
+	p.data = ciphertext;
+	p.length = ciphertext_len;
+
+	return p;
 }
 
-std::pair<unsigned char*, int> Crypto::decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned char *key, unsigned char* iv) {
+crypto_data crypto_decrypt(unsigned char* ciphertext, int ciphertextLength, unsigned char *key, unsigned char* iv) {
 
-	unsigned char* plaintext = new unsigned char[ciphertextLength];
+	crypto_data p;
+
+	if (!ciphertext) {
+		p.error = true;
+		p.message = "Cipher text must be defined";
+		return p;
+	}
+
+	if (ciphertextLength < 0) {
+		p.error = true;
+		p.message = "Cipher text length must be positive";
+		return p;
+	}
+
+	unsigned char* plaintext = malloc(sizeof(unsigned char) * (ciphertextLength));
 
 	/* Load the human readable error strings for libcrypto */
 	ERR_load_crypto_strings();
@@ -106,7 +127,7 @@ std::pair<unsigned char*, int> Crypto::decrypt(unsigned char* ciphertext, int ci
 
 	/* Create and initialise the context */
 	if (!(ctx = EVP_CIPHER_CTX_new()))
-		handleErrors();
+		crypto_handle_errors();
 
 	/* Initialise the decryption operation. IMPORTANT - ensure you use a key
 	 * and IV size appropriate for your cipher
@@ -114,20 +135,22 @@ std::pair<unsigned char*, int> Crypto::decrypt(unsigned char* ciphertext, int ci
 	 * IV size for *most* modes is the same as the block size. For AES this
 	 * is 128 bits */
 	if (1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-		handleErrors();
+		crypto_handle_errors();
 
 	/* Provide the message to be decrypted, and obtain the plaintext output.
 	 * EVP_DecryptUpdate can be called multiple times if necessary
 	 */
 	if (1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertextLength))
-		handleErrors();
+		crypto_handle_errors();
+
 	plaintext_len = len;
 
 	/* Finalise the decryption. Further plaintext bytes may be written at
 	 * this stage.
 	 */
 	if (1 != EVP_DecryptFinal_ex(ctx, plaintext + len, &len))
-		handleErrors();
+		crypto_handle_errors();
+
 	plaintext_len += len;
 
 	/* Clean up */
@@ -144,9 +167,9 @@ std::pair<unsigned char*, int> Crypto::decrypt(unsigned char* ciphertext, int ci
 
 	plaintext[plaintext_len] = '\0';
 
-	return std::make_pair(plaintext, plaintext_len);
-}
+	p.error = false;
+	p.data = plaintext;
+	p.length = plaintext_len;
 
-} /* namespace crypt */
-} /* namespace thiagoh */
-} /* namespace com */
+	return p;
+}
