@@ -1,20 +1,14 @@
 enable_testing()
-#add_definitions (-DBOOST_TEST_DYN_LINK)
-
-find_package(Boost REQUIRED COMPONENTS thread system unit_test_framework REQUIRED)
 
 find_package(OpenSSL REQUIRED)
 
 include_directories(
-    ${Boost_INCLUDE_DIRS} 
+    ${CMOCKA_PUBLIC_INCLUDE_DIRS}
     ${OpenSSL_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR} 
 	${CMAKE_SOURCE_DIR}/src 
 	${CMAKE_SOURCE_DIR}/src/impl 
 	${CMAKE_SOURCE_DIR}/src/include)
-	
-message("Boost include dir: ${Boost_INCLUDE_DIRS}")
-message("Boost libraries: ${Boost_LIBRARIES}")
 	
 message("OpenSSL root dir: ${OPENSSL_ROOT_DIR}")
 message("OpenSSL version: ${OPENSSL_VERSION}")
@@ -26,8 +20,7 @@ add_executable (test_crypt tests_1.c)
 target_link_libraries(test_crypt 
 	crypto_c
 	 check
-	${Boost_LIBRARIES} 
-	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} 
+	${CMOCKA_SHARED_LIBRARY} 
 	${OpenSSL_LIBRARIES}
 	crypto ssl)
 	
