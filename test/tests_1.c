@@ -1,19 +1,8 @@
 #include <crypto.h>
-#include <string.h>
 #include "time.h"
-#include <stdarg.h>
-#include <stddef.h>
-#include <setjmp.h>
-#include <cmocka.h>
+#include <check.h>
 
-/* A test case that does nothing and succeeds. */
-static void null_test_success(void **state) {
-
-    (void) state; /* unused */
-}
-
-/* A test case that does nothing and succeeds. */
-static void simple_test_success(void **state) {
+int main(int argc, char **argv) {
 
 	long current_time; // real call is required here
 	time(&current_time);
@@ -28,12 +17,9 @@ static void simple_test_success(void **state) {
 
 	crypto_data cipheredPair = crypto_encrypt(plain, strlen((char*) plain), key, iv);
 	crypto_data decipheredPair = crypto_decrypt(cipheredPair.data, cipheredPair.length, key, iv);
-}
 
-int main(void) {
-    const struct CMUnitTest tests[] = {
-        cmocka_unit_test(null_test_success),
-        cmocka_unit_test(simple_test_success),
-    };
-    return cmocka_run_group_tests(tests, NULL, NULL);
+	ck_assert_int_eq(strlen((char*) plain), decipheredPair.length);
+	ck_assert_int_eq(strncmp((const char *)plain, (const char *) decipheredPair.data, strlen((char*) plain)), 0);
+
+	return 0;
 }

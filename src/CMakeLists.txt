@@ -8,9 +8,13 @@ add_library(crypto_c ${SOURCES})
 
 install(TARGETS app DESTINATION bin)
 
+find_package( Boost REQUIRED COMPONENTS thread system)
+include_directories(${Boost_INCLUDE_DIRS})
+
 find_package(OpenSSL)
 include_directories(${OpenSSL_INCLUDE_DIRS})
 
 target_link_libraries(app
+	${Boost_LIBRARIES} 
 	${OpenSSL_LIBRARIES}
 	crypto ssl)
