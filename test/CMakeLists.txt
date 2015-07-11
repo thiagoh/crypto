@@ -21,14 +21,14 @@ message("OpenSSL version: ${OPENSSL_VERSION}")
 message("OpenSSL include dir: ${OPENSSL_INCLUDE_DIR}")
 message("OpenSSL libraries: ${OPENSSL_LIBRARIES}")
 
-add_executable (test_crypt tests_1.c)
+add_executable (test_crypt crypto_tests_1.cpp)
 
 target_link_libraries(test_crypt 
-	crypto_c
-	 check
+	app_project
 	${Boost_LIBRARIES} 
 	${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} 
 	${OpenSSL_LIBRARIES}
 	crypto ssl)
 	
 add_test(TestCase1 test_crypt)
+add_test(TestCase2 ${CMAKE_CURRENT_BINARY_DIR}/test_crypt)
