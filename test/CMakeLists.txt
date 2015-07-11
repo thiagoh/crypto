@@ -19,7 +19,6 @@ add_executable (test_crypt tests_1.c)
 
 target_link_libraries(test_crypt 
 	crypto_c
-	 check
 	${CMOCKA_SHARED_LIBRARY} 
 	${OpenSSL_LIBRARIES}
 	crypto ssl)
