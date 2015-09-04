@@ -1,8 +1,10 @@
-# Crypto C++ library 
+# Crypto C++ library (deprecated)
 
 [![Build Status](https://travis-ci.org/thiagoh/crypto.svg?branch=master)](https://travis-ci.org/thiagoh/crypto)
 
 This library is intented to encrypt and decrypt data
+
+This library is deprecated. Please see https://github.com/thiagoh/crypto-c
 
 ## Usage
 
